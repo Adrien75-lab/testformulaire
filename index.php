@@ -1,42 +1,92 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Afficher/masquer une value dans une</title>
-    <style>
-      option{
-        display:none;
-      }
-    </style>
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    
-    
-  </head>
-  <body>
-  <script type="text/javascript">
-        
-        const des = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
-Object.defineProperty(HTMLInputElement.prototype, 'value', {
-  get: function() {
-    const value = des.get.call(this);
-  
-    if (this.type === 'text' && this.list) {
-      const opt = [].find.call(this.list.options, o => o.value === value);
-      return opt ? opt.dataset.value : value;
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+  <style>
+    h1 {
+      
+      font-weight: lighter;
+      
+      text-align: center;
+      padding: 30px 0;
+      font-size: 40px;
+
     }
+  </style>
 
-    return value;  
-  } 
-});
-  
-    </script>
-  <input list="options" oninput="console.log(this.value);" />
-<datalist id="options">
-<option data-value="1"><?php echo "salut"; ?></option>
-  <option data-value="2">Bar</option>
-  <option data-value="3">Foo</option>
-</datalist>
+</head>
 
-  </body>
+<body>
+  <form>
+    <h1>Personnaliser un produit pour un client</h1>
+    <hr>
+    <br>
+    <div class="form-group row justify-content-center">
+      <label for="inputPassword3" class="col-sm-2 col-form-label">Liste des clients</label>
+      <div class="col-sm-4">
+        <select name="select-client" class="form-select" onchange="add_product_in_select_from_clientID('<?= $getProductParameterPath ?>',this.value)" id="select-client" name="client">
+          <option value="" ?>-- Séléctionner un client --</option>
+          <?php
+          foreach ($clients as $client) {
+          ?>
+            <option class="" value=<?php echo $client->ID ?>><?php echo "$client->user_nicename ($client->user_email) " ?></option>
+          <?php
+          }
+          ?>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row justify-content-center">
+      <label for="inputPassword3" class="col-sm-2 col-form-label">Liste des articles</label>
+      <div class="col-sm-4">
+        <select class="form-select " name="select-article" id="select-article" onchange="add_parameters_from_products('<?= $getProductParameterPath ?>', document.getElementById('select-client').value, this.value)">
+          <option value="" hidden>-- Liste des articles --</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row justify-content-center">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">Nom à afficher</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" id="commercial-name" value="">
+      </div>
+    </div>
+    <div class="form-group row justify-content-center">
+      <label for="text" class="col-sm-2 col-form-label">Prix maximum</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" id="max-price" value="" required>
+      </div>
+    </div>
+    <div class="form-group row justify-content-center">
+      <label for="text" class="col-sm-2 col-form-label">Prix minimum</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" id="min-price" value="" required>
+      </div>
+    </div>
+    <div class="form-group row justify-content-center">
+      <label for="text" class="col-sm-2 col-form-label">Quantité pour atteindre le prix maximum</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="min-price-qty" id="max-price-qty" value="" required>
+      </div>
+    </div>
+    <div class="form-group row justify-content-center">
+      <label for="text" class="col-sm-2 col-form-label">Quantité pour atteindre le prix minimum</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="min-price-qty" id="min-price-qty" value="" required>
+      </div>
+    </div>
+    <div class="mx-auto" style="width:200px;">
+      <div class="col-sm-10">
+        <button onclick="postCustomProductParameter('form-modify-products')" type="button" class="btn btn-primary">Ajouter</button>
+      </div>
+    </div>
+  </form>
+
+</body>
+
 </html>
